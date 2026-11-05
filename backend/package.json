@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14",
-    "sequelize-cli": "^6.6.5"
+    "sequelize-cli": "^6.6.5",
+    "@ljharb/tsconfig": "^0.3.2"
   }
 }
