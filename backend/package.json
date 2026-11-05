@@ -1,0 +1,33 @@
+{
+  "name": "eventos-orm",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000e\u0000v\u0000e\u0000n\u0000t\u0000o\u0000s\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuelellis0723-jpg/eventos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/samuelellis0723-jpg/eventos/issues"
+  },
+  "homepage": "https://github.com/samuelellis0723-jpg/eventos#readme",
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "mysql2": "^3.24.6",
+    "sequelize": "^6.37.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "sequelize-cli": "^6.6.5"
+  }
+}
