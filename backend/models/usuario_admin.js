@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
 
       UsuarioAdmin.belongsTo(models.Empleado, { foreignKey: 'empleado_id', as: 'empleado' });
+      UsuarioAdmin.hasMany(models.SesionAdmin, { foreignKey: 'usuario_admin_id', as: 'sesiones' });
       UsuarioAdmin.belongsToMany(models.RolAdmin, {
         through: models.UsuarioAdminRol,
         foreignKey: 'usuario_admin_id',
@@ -44,6 +45,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(180),
       allowNull: false
     },
+    password_hash: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
@@ -60,6 +65,9 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'usuario_admin',
       freezeTableName: true,
       timestamps: false,
+      defaultScope: {
+        attributes: { exclude: ['password_hash'] }
+      },
     indexes: [
       { unique: true, name: 'usuario_admin_proveedor_subject_unique', fields: ["proveedor_auth","subject_auth"] }
     ]
