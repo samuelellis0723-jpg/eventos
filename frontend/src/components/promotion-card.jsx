@@ -1,18 +1,26 @@
+import { formatPublicDate } from '../services/format-date.js';
+
 export default function PromotionCard({ promotion }) {
+  const description = promotion.resumen || promotion.descripcion || '';
+
   return (
     <article className="promotion-card">
       <div className="promotion-card__top">
-        <span className="sample-label">Promoción de ejemplo</span>
+        <span className="sample-label">Promoción publicada</span>
       </div>
       <div className="promotion-card__body">
-        <h3>{promotion.title}</h3>
-        <p>{promotion.description}</p>
+        <h3>{promotion.nombre}</h3>
+        {description && <p>{description}</p>}
       </div>
-      <p className="promotion-card__validity">{promotion.validity}</p>
-      <details className="card-disclosure">
-        <summary>Ver condiciones de ejemplo</summary>
-        <p>{promotion.details}</p>
-      </details>
+      <p className="promotion-card__validity">
+        Vigencia: {formatPublicDate(promotion.fecha_inicio)} – {formatPublicDate(promotion.fecha_fin)}
+      </p>
+      {promotion.condiciones && (
+        <details className="card-disclosure">
+          <summary>Ver condiciones</summary>
+          <p>{promotion.condiciones}</p>
+        </details>
+      )}
     </article>
   );
 }

@@ -3,6 +3,9 @@ const { Router } = require('express');
 
 const router = Router();
 
+// Lecturas públicas de la web, separadas de las rutas internas de gestión.
+router.use('/public', require('./public.routes'));
+
 // Módulos organizados según los TableGroup del DBML
 router.use(require('./acceso_admin.routes'));
 router.use(require('./contactos.routes'));

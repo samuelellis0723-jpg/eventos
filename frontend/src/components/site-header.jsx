@@ -1,6 +1,11 @@
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 export default function SiteHeader() {
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+  const isLoyalty = pathname === '/lealtad';
+  const isSurveys = pathname === '/encuestas';
+
   return (
     <header className="site-header-wrap">
       <div className="site-header page-shell">
@@ -9,13 +14,27 @@ export default function SiteHeader() {
           <span>Eventos<span className="brand__accent">+</span></span>
         </Link>
         <nav className="site-nav" aria-label="Navegación principal">
-          <Link className="site-nav__active" to="/" aria-current="page">Inicio</Link>
-          <span className="site-nav__pending" aria-disabled="true">
-            Lealtad<span className="site-nav__status">Próximamente</span>
-          </span>
-          <span className="site-nav__pending" aria-disabled="true">
-            Encuestas<span className="site-nav__status">Próximamente</span>
-          </span>
+          <Link
+            className={isHome ? 'site-nav__active' : 'site-nav__link'}
+            to="/"
+            aria-current={isHome ? 'page' : undefined}
+          >
+            Inicio
+          </Link>
+          <Link
+            className={isLoyalty ? 'site-nav__active' : 'site-nav__link'}
+            to="/lealtad"
+            aria-current={isLoyalty ? 'page' : undefined}
+          >
+            Lealtad
+          </Link>
+          <Link
+            className={isSurveys ? 'site-nav__active' : 'site-nav__link'}
+            to="/encuestas"
+            aria-current={isSurveys ? 'page' : undefined}
+          >
+            Encuestas
+          </Link>
         </nav>
       </div>
     </header>
