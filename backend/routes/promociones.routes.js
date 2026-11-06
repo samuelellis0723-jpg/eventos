@@ -9,13 +9,14 @@ const {
 const { registrarValidaciones } = require('./validators');
 
 const router = registrarValidaciones(Router());
+const promotionEditor = require('../controllers/admin-content.controller').promociones;
 
 // Promociones
 router.get('/promociones', promocionController.getAll);
-router.post('/promociones', promocionController.create);
+router.post('/promociones', promotionEditor.save);
 router.get('/promociones/slug/:slug', promocionController.getBySlug);
 router.get('/promociones/:id', promocionController.getById);
-router.put('/promociones/:id', promocionController.update);
+router.put('/promociones/:id', promotionEditor.save);
 router.delete('/promociones/:id', promocionController.delete);
 router.get('/promociones/:promocion_id/productos', promocionProductoController.getProductosPorPromocion);
 router.get('/productos-seguro/:producto_id/promociones', promocionProductoController.getPromocionesPorProducto);

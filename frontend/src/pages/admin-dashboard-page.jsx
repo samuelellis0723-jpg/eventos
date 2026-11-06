@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 const modules = [
   { number: '01', title: 'Eventos', description: 'Gestión de eventos.' },
   { number: '02', title: 'Promociones', description: 'Gestión de promociones.' },
@@ -16,7 +17,7 @@ export default function AdminDashboardPage() {
 
       <section className="admin-status-note" aria-label="Estado del panel">
         <span className="admin-status-note__marker" aria-hidden="true" />
-        <p>Los módulos de gestión estarán disponibles cuando sus pantallas administrativas estén listas.</p>
+        <p>Crea borradores, revisa el contenido y publícalo desde cada módulo. La vigencia y visibilidad determinan qué aparece en el sitio público.</p>
       </section>
 
       <section className="admin-module-section" aria-labelledby="admin-modules-title">
@@ -29,10 +30,11 @@ export default function AdminDashboardPage() {
             <article className="admin-module-card" key={module.title}>
               <div className="admin-module-card__heading">
                 <p className="admin-module-card__number">{module.number} / {module.title}</p>
-                <span className="admin-module-card__status">Próximamente</span>
+                <span className="admin-module-card__status">Disponible</span>
               </div>
               <h3>{module.title}</h3>
               <p>{module.description}</p>
+              <Link className="text-link" to={`/admin/${module.title.toLowerCase()}`}>Gestionar {module.title.toLowerCase()}</Link>
             </article>
           ))}
         </div>

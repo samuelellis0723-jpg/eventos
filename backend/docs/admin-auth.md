@@ -8,6 +8,8 @@ El proyecto no tiene un flujo OAuth/OIDC ni otro proveedor de identidad conectad
 
 Desde una terminal interactiva, en el directorio `backend/`:
 
+Configura primero `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` y `DB_NAME` en `backend/.env` o en el entorno. `config/config.js` y `.sequelizerc` comparten esa configuración entre el servidor y Sequelize CLI. `.env.example` solo contiene valores de ejemplo. El archivo local `.env` está ignorado por Git.
+
 ```powershell
 npx sequelize-cli db:migrate
 node scripts/create-local-admin.js
@@ -25,6 +27,10 @@ Si el servidor está en producción, configura `ADMIN_ALLOWED_ORIGINS` con el or
 - `POST /api/auth/logout`: requiere sesión, origen permitido y token CSRF; elimina la sesión en la base y revoca la cookie.
 
 La cookie `eventos_admin_session` es `HttpOnly`, `SameSite=Strict`, tiene una duración fija de ocho horas y contiene un token aleatorio cuyo hash se guarda en `sesion_admin`. La cookie `eventos_admin_csrf` es legible por el cliente para que pueda enviarla en `X-CSRF-Token`; su hash queda asociado a la sesión.
+
+La migración `20261106000001-create-admin-login-limit.js` agrega límites persistentes de acceso: hasta 10 intentos por combinación IP/correo y 50 por IP en ventanas de 15 minutos. Se cuentan también los accesos correctos. Al superar el límite responde `429` y `Retry-After: 900`. Se guardan claves SHA-256, sin guardar el correo o la IP en esta tabla. El servidor no confía en `X-Forwarded-For` por defecto.
+
+La configuración y evidencia completas de gestión de contenido y envío público están en [implementation-audit.md](implementation-audit.md).
 
 ## Permisos
 

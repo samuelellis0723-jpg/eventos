@@ -1,0 +1,99 @@
+{
+  "generadoEn": "2026-11-06T05:28:03.777Z",
+  "navegador": {
+    "disponible": false,
+    "evidencia": "cua.getState(): {\"apps\":[],\"browsers\":[]}"
+  },
+  "casos": [
+    {
+      "ruta": "/",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Carga directa del HTML de la SPA"
+    },
+    {
+      "ruta": "/lealtad",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Carga directa del HTML de la SPA"
+    },
+    {
+      "ruta": "/encuestas",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Carga directa del HTML de la SPA"
+    },
+    {
+      "ruta": "/admin/login",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Carga directa del HTML de la SPA"
+    },
+    {
+      "ruta": "/admin",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Carga directa del HTML de la SPA"
+    },
+    {
+      "ruta": "/admin/eventos",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Carga directa del HTML de la SPA"
+    },
+    {
+      "ruta": "/admin/promociones",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Carga directa del HTML de la SPA"
+    },
+    {
+      "ruta": "/admin/lealtad",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Carga directa del HTML de la SPA"
+    },
+    {
+      "ruta": "/admin/encuestas",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Carga directa del HTML de la SPA"
+    },
+    {
+      "ruta": "/api/public/eventos",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Proxy Vite a API de pruebas"
+    },
+    {
+      "ruta": "/api/public/promociones",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Proxy Vite a API de pruebas"
+    },
+    {
+      "ruta": "/api/public/programas-lealtad",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Proxy Vite a API de pruebas"
+    },
+    {
+      "ruta": "/api/public/encuestas",
+      "resultado": "PASS",
+      "http": 200,
+      "comprobacion": "Proxy Vite a API de pruebas"
+    },
+    {
+      "ruta": "/api/auth/session",
+      "resultado": "PASS",
+      "http": 401,
+      "comprobacion": "Proxy Vite a API de pruebas"
+    },
+    {
+      "ruta": "/api/admin/eventos",
+      "resultado": "PASS",
+      "http": 401,
+      "comprobacion": "Proxy Vite a API de pruebas"
+    }
+  ]
+}

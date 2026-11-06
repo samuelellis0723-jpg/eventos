@@ -10,13 +10,14 @@ const {
 const { registrarValidaciones } = require('./validators');
 
 const router = registrarValidaciones(Router());
+const eventEditor = require('../controllers/admin-content.controller').eventos;
 
 // Eventos de mercadeo
 router.get('/eventos', eventoMercadeoController.getAll);
-router.post('/eventos', eventoMercadeoController.create);
+router.post('/eventos', eventEditor.save);
 router.get('/eventos/slug/:slug', eventoMercadeoController.getBySlug);
 router.get('/eventos/:id', eventoMercadeoController.getById);
-router.put('/eventos/:id', eventoMercadeoController.update);
+router.put('/eventos/:id', eventEditor.save);
 router.delete('/eventos/:id', eventoMercadeoController.delete);
 
 // Inscripciones a eventos

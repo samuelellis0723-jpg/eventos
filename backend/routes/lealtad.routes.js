@@ -10,12 +10,13 @@ const {
 const { registrarValidaciones } = require('./validators');
 
 const router = registrarValidaciones(Router());
+const loyaltyEditor = require('../controllers/admin-content.controller').lealtad;
 
 // Programas de lealtad
 router.get('/programas-lealtad', programaLealtadController.getAll);
-router.post('/programas-lealtad', programaLealtadController.create);
+router.post('/programas-lealtad', loyaltyEditor.save);
 router.get('/programas-lealtad/:id', programaLealtadController.getById);
-router.put('/programas-lealtad/:id', programaLealtadController.update);
+router.put('/programas-lealtad/:id', loyaltyEditor.save);
 router.delete('/programas-lealtad/:id', programaLealtadController.delete);
 
 // Beneficios

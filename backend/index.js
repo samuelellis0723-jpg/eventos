@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const express = require('express');
 const routes = require('./routes');
@@ -8,7 +8,7 @@ const { sequelize } = require('./models');
 const app = express();
 
 // Middlewares para parseo de peticiones
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Endpoint de bienvenida y estado del servicio
@@ -43,7 +43,7 @@ app.use((err, req, res, next) => {
   }
   return res.status(err.status || 500).json({
     success: false,
-    message: err.message || 'Error interno del servidor'
+    message: err.status && err.status < 500 ? err.message : 'Error interno del servidor'
   });
 });
 

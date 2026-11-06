@@ -1,0 +1,70 @@
+{
+  "generadoEn": "2026-11-06T05:28:43.126Z",
+  "rama": "samu",
+  "baseLocal": "e375c2b",
+  "mysql": {
+    "basePruebas": "eventos_audit_20261106_test",
+    "migracionesVerificadas": 37,
+    "baseExistenteModificada": false
+  },
+  "comprobacionesApi": {
+    "total": 81,
+    "pass": 81
+  },
+  "comprobacionesRutasProxy": {
+    "total": 15,
+    "pass": 15
+  },
+  "comandos": [
+    {
+      "directorio": "backend",
+      "comando": "npm run test:prepare",
+      "exitCode": 0,
+      "migraciones": 37
+    },
+    {
+      "directorio": "backend",
+      "comando": "npm test",
+      "exitCode": 0,
+      "pruebas": 8,
+      "pass": 8
+    },
+    {
+      "directorio": "frontend",
+      "comando": "npm test",
+      "exitCode": 0,
+      "pruebas": 4,
+      "pass": 4
+    },
+    {
+      "directorio": "frontend",
+      "comando": "npm run build",
+      "exitCode": 0,
+      "modulos": 125,
+      "assets": [
+        {
+          "archivo": "index-2o89zITo.js",
+          "bytes": 310781
+        },
+        {
+          "archivo": "index-D7gBkCYs.css",
+          "bytes": 35720
+        }
+      ]
+    },
+    {
+      "directorio": ".",
+      "comando": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "navegador": {
+    "disponible": false,
+    "evidencia": "cua.getState(): {\"apps\":[],\"browsers\":[]}"
+  },
+  "accionesGit": {
+    "commit": false,
+    "push": false,
+    "reescrituraHistorial": false
+  }
+}

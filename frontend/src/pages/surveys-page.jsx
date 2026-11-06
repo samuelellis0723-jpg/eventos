@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import EmptyState from '../components/empty-state.jsx';
 import PaginationControls from '../components/pagination-controls.jsx';
 import RequestState from '../components/request-state.jsx';
@@ -6,6 +6,8 @@ import SiteFooter from '../components/site-footer.jsx';
 import SiteHeader from '../components/site-header.jsx';
 import SurveyQuestion from '../components/survey-question.jsx';
 import useApiResource from '../hooks/use-api-resource.js';
+import { apiFetch } from '../services/api.js';
+import { getQuestionError, serializeAnswers } from '../services/survey-validation.js';
 
 const PAGE_SIZE = 6;
 
@@ -17,58 +19,15 @@ const surveyTypeLabels = {
   post_venta: 'Postventa',
 };
 
-function getQuestionError(question, answer) {
-  if (question.tipo_respuesta === 'texto') {
-    return question.obligatoria && !String(answer ?? '').trim() ? 'Escribe una respuesta para continuar.' : '';
-  }
-
-  if (question.tipo_respuesta === 'numerica') {
-    const hasAnswer = answer !== undefined && answer !== null && answer !== '';
-    if (!hasAnswer) return question.obligatoria ? 'Ingresa un número para continuar.' : '';
-
-    const numericAnswer = Number(answer);
-    if (!Number.isFinite(numericAnswer)) return 'Ingresa un número válido.';
-    if (question.valor_minimo != null && numericAnswer < question.valor_minimo) {
-      return `El valor mínimo es ${question.valor_minimo}.`;
-    }
-    if (question.valor_maximo != null && numericAnswer > question.valor_maximo) {
-      return `El valor máximo es ${question.valor_maximo}.`;
-    }
-    return '';
-  }
-
-  if (question.tipo_respuesta === 'escala') {
-    const hasAnswer = answer !== undefined && answer !== null && answer !== '';
-    if (!hasAnswer) return question.obligatoria ? 'Selecciona una respuesta para continuar.' : '';
-    const numericAnswer = Number(answer);
-    if (numericAnswer < question.valor_minimo || numericAnswer > question.valor_maximo) {
-      return 'Selecciona un valor dentro de la escala.';
-    }
-    return '';
-  }
-
-  const allowedValues = (question.opciones || []).map((option) => option.valor);
-  if (question.tipo_respuesta === 'opcion_multiple') {
-    const selected = Array.isArray(answer) ? answer : [];
-    if (question.obligatoria && selected.length === 0) return 'Selecciona una o más respuestas para continuar.';
-    if (selected.some((value) => !allowedValues.includes(value))) return 'Selecciona opciones válidas.';
-    return '';
-  }
-
-  if (question.tipo_respuesta === 'opcion_unica' || question.tipo_respuesta === 'si_no') {
-    if (!answer) return question.obligatoria ? 'Selecciona una respuesta para continuar.' : '';
-    return allowedValues.includes(answer) ? '' : 'Selecciona una respuesta válida.';
-  }
-
-  return '';
-}
-
 export default function SurveysPage() {
   const [page, setPage] = useState(1);
   const [selectedSlug, setSelectedSlug] = useState('');
   const [answers, setAnswers] = useState({});
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const submitting = useRef(false);
   const surveysRequest = useApiResource(`/public/encuestas?page=${page}&limit=${PAGE_SIZE}`);
   const surveys = surveysRequest.data || [];
   const activeSlug = surveys.some((survey) => survey.slug === selectedSlug)
@@ -83,13 +42,16 @@ export default function SurveysPage() {
     setAnswers({});
     setErrors({});
     setSubmitted(false);
+    setSubmitError('');
   }, [activeSlug]);
 
   function selectSurvey(survey) {
+    if (submitting.current) return;
     setSelectedSlug(survey.slug);
     setAnswers({});
     setErrors({});
     setSubmitted(false);
+    setSubmitError('');
   }
 
   function updateAnswer(questionId, value) {
@@ -102,9 +64,9 @@ export default function SurveysPage() {
     setSubmitted(false);
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    if (detailRequest.status !== 'success' || !selectedSurvey) return;
+    if (detailRequest.status !== 'success' || !selectedSurvey || !selectedSurvey.permite_anonimas || submitting.current || submitted) return;
 
     const nextErrors = {};
     const questions = selectedSurvey.preguntas || [];
@@ -117,14 +79,25 @@ export default function SurveysPage() {
     if (Object.keys(nextErrors).length > 0) {
       setSubmitted(false);
       const firstInvalid = questions.find((question) => nextErrors[question.id]);
-      document
-        .getElementById(`survey-question-${firstInvalid.id}`)
-        ?.querySelector('input, textarea')
-        ?.focus();
+      const field = document.getElementById(`survey-question-${firstInvalid.id}`);
+      (field?.querySelector('input, textarea') || field)?.focus();
       return;
     }
 
-    setSubmitted(true);
+    submitting.current = true;
+    setPending(true);
+    setSubmitError('');
+    try {
+      await apiFetch(`/public/encuestas/${encodeURIComponent(selectedSurvey.slug)}/respuestas`, {
+        method: 'POST', body: JSON.stringify(serializeAnswers(questions, answers)),
+      });
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(error.message || 'No se pudieron guardar las respuestas. Puedes intentarlo de nuevo.');
+    } finally {
+      submitting.current = false;
+      setPending(false);
+    }
   }
 
   return (
@@ -132,7 +105,7 @@ export default function SurveysPage() {
       <SiteHeader />
       <main>
         <p className="preview-banner page-shell">
-          Las encuestas son públicas. Las respuestas de este formulario no se guardan.
+          Las encuestas habilitadas permiten responder de forma anónima. No incluyas datos personales.
         </p>
 
         <section className="survey-intro page-shell" aria-labelledby="surveys-title">
@@ -171,6 +144,7 @@ export default function SurveysPage() {
                         type="button"
                         key={survey.slug}
                         aria-pressed={isSelected}
+                        disabled={pending}
                         onClick={() => selectSurvey(survey)}
                       >
                         <span className="survey-example-badge">Encuesta pública</span>
@@ -186,7 +160,7 @@ export default function SurveysPage() {
                 <PaginationControls
                   pagination={surveysRequest.pagination}
                   label="encuestas"
-                  onPageChange={setPage}
+                  onPageChange={next => { if (!pending) setPage(next); }}
                 />
               </aside>
 
@@ -211,11 +185,13 @@ export default function SurveysPage() {
                     </span>
                   </header>
 
-                  <form className="survey-form" noValidate onSubmit={handleSubmit}>
+                  <form className="survey-form" noValidate onSubmit={handleSubmit} aria-busy={pending}>
                     <p className="survey-required-note" role="note">
-                      Las respuestas no se guardan. Las preguntas marcadas como obligatorias deben responderse.
+                      {selectedSurvey.permite_anonimas ? 'Tus respuestas se guardarán de forma anónima. Las preguntas obligatorias deben responderse.' : 'Esta encuesta no está habilitada para recibir respuestas anónimas desde el sitio público.'}
                     </p>
-                    <div className="survey-question-list">
+                    <fieldset className="survey-response-fields" disabled={pending || submitted || !selectedSurvey.permite_anonimas}>
+                      <legend className="sr-only">Respuestas de la encuesta</legend>
+                      <div className="survey-question-list">
                       {(selectedSurvey.preguntas || [])
                         .slice()
                         .sort((left, right) => left.orden - right.orden)
@@ -229,15 +205,18 @@ export default function SurveysPage() {
                           />
                         ))}
                     </div>
+                    </fieldset>
+
+                    {submitError && <p className="admin-notice admin-notice--error" role="alert">{submitError} Tus respuestas permanecen en el formulario.</p>}
 
                     {submitted && (
                       <p className="survey-status" role="status" aria-live="polite">
-                        Demostración: tus respuestas no se guardaron
+                        Tus respuestas se guardaron de forma anónima. Gracias por participar.
                       </p>
                     )}
 
-                    <button className="button survey-submit" type="submit">
-                      Mostrar resultado (sin guardar)
+                    <button className="button survey-submit" type="submit" disabled={pending || submitted || !selectedSurvey.permite_anonimas}>
+                      {pending ? 'Enviando…' : submitted ? 'Respuestas enviadas' : 'Enviar respuestas'}
                     </button>
                   </form>
                 </section>

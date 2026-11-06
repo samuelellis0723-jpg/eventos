@@ -80,7 +80,7 @@ function getAllowedOrigins() {
 function requireAllowedOrigin(req, res, next) {
   const origin = req.get('origin');
   if (!origin || !getAllowedOrigins().includes(origin)) {
-    return res.status(403).json({ success: false, message: 'Origen no permitido.' });
+    return res.status(403).json({ success: false, code: 'ORIGIN_NOT_ALLOWED', message: 'Origen no permitido.' });
   }
   return next();
 }
@@ -89,7 +89,7 @@ function requirePreAuthCsrf(req, res, next) {
   const cookieToken = readCookie(req, CSRF_COOKIE);
   const headerToken = req.get('x-csrf-token');
   if (!cookieToken || !safeEqualText(cookieToken, headerToken)) {
-    return res.status(403).json({ success: false, message: 'Token CSRF inválido o ausente.' });
+    return res.status(403).json({ success: false, code: 'CSRF_INVALID', message: 'Token CSRF inválido o ausente.' });
   }
   return next();
 }
@@ -147,7 +147,7 @@ function requireRole(roleCode) {
   return (req, res, next) => {
     const roles = req.adminUser?.roles || [];
     if (!roles.some((role) => role.codigo === roleCode)) {
-      return res.status(403).json({ success: false, message: 'No tienes el rol requerido.' });
+      return res.status(403).json({ success: false, code: 'FORBIDDEN', message: 'No tienes el rol requerido.' });
     }
     return next();
   };
@@ -163,7 +163,7 @@ function protectMutatingRequests(req, res, next) {
   if (!origin || !getAllowedOrigins().includes(origin)
     || !csrfCookie || !safeEqualText(csrfCookie, csrfHeader)
     || !expectedHash || !safeEqualText(sha256(csrfCookie), expectedHash)) {
-    return res.status(403).json({ success: false, message: 'La solicitud no superó la validación CSRF.' });
+    return res.status(403).json({ success: false, code: 'CSRF_INVALID', message: 'La solicitud no superó la validación CSRF.' });
   }
   return next();
 }

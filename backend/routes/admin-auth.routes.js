@@ -2,6 +2,7 @@
 
 const { Router } = require('express');
 const controller = require('../controllers/admin-auth.controller');
+const loginRateLimit = require('../middleware/login-rate-limit');
 const {
   authenticateAdmin,
   requireAllowedOrigin,
@@ -12,7 +13,7 @@ const {
 const router = Router();
 
 router.get('/csrf', controller.issueCsrf);
-router.post('/login', requireAllowedOrigin, requirePreAuthCsrf, controller.login);
+router.post('/login', requireAllowedOrigin, requirePreAuthCsrf, loginRateLimit, controller.login);
 router.get('/session', authenticateAdmin, controller.getSession);
 router.post('/logout', authenticateAdmin, protectMutatingRequests, controller.logout);
 

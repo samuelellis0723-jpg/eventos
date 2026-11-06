@@ -11,13 +11,22 @@ const {
 const { registrarValidaciones } = require('./validators');
 
 const router = registrarValidaciones(Router());
+const surveyEditor = require('../controllers/admin-content.controller').encuestas;
+// El grafo se escribe de forma atómica. Las rutas anteriores de lectura se conservan.
+router.use((req, res, next) => {
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
+  if (/^\/(preguntas-encuesta|opciones-encuesta)(\/|$)/.test(req.path) || (req.method === 'DELETE' && /^\/encuestas\//.test(req.path))) {
+    return res.status(409).json({ success: false, message: 'Usa el editor completo de /api/admin/encuestas para conservar preguntas y respuestas. Archiva la encuesta en lugar de eliminarla.' });
+  }
+  return next();
+});
 
 // Encuestas
 router.get('/encuestas', encuestaController.getAll);
-router.post('/encuestas', encuestaController.create);
+router.post('/encuestas', surveyEditor.save);
 router.get('/encuestas/slug/:slug', encuestaController.getBySlug);
 router.get('/encuestas/:id', encuestaController.getById);
-router.put('/encuestas/:id', encuestaController.update);
+router.put('/encuestas/:id', surveyEditor.save);
 router.delete('/encuestas/:id', encuestaController.delete);
 
 // Preguntas

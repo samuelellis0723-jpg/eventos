@@ -1,0 +1,479 @@
+{
+  "generadoEn": "2026-11-06T05:28:01.961Z",
+  "basePruebas": "eventos_audit_20261106_test",
+  "casos": [
+    {
+      "caso": "Visitante: /contactos",
+      "esperado": 401,
+      "obtenido": 401,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Visitante: /usuarios-admin",
+      "esperado": 401,
+      "obtenido": 401,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Visitante: /participaciones-encuesta",
+      "esperado": 401,
+      "obtenido": 401,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Visitante: /respuestas-encuesta",
+      "esperado": 401,
+      "obtenido": 401,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Visitante: /admin/eventos",
+      "esperado": 401,
+      "obtenido": 401,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Lectura pública: /public/eventos",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Lectura pública: /public/promociones",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Lectura pública: /public/programas-lealtad",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Lectura pública: /public/encuestas",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Emisión CSRF",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Login sin CSRF",
+      "esperado": 403,
+      "obtenido": 403,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Login administrador",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Sesión después de recarga",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Administrador autorizado",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Escritura autenticada sin CSRF",
+      "esperado": 403,
+      "obtenido": 403,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "CSRF de cuenta sin rol",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Login sin rol",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Usuario sin permiso",
+      "esperado": 403,
+      "obtenido": 403,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Sesión sin rol consultable para vista 403",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Sesión vencida rechazada",
+      "esperado": 401,
+      "obtenido": 401,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "CSRF después de expirar",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Nueva sesión para comprobar cuenta activa",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Cuenta desactivada invalida sesión",
+      "esperado": 401,
+      "obtenido": 401,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Cookie de sesión Secure y HttpOnly en producción",
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Crear borrador de evento",
+      "esperado": 201,
+      "obtenido": 201,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Publicar evento independientemente de estado",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Evento publicado aparece en Inicio; estado cancelado no filtra publicación",
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Promoción con vigencia invertida",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Porcentaje de descuento fuera de rango",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Publicar promoción vigente",
+      "esperado": 201,
+      "obtenido": 201,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Editar promoción vencida",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Promoción vencida excluida del sitio público",
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Ruta anterior también valida vigencia",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Crear programa y beneficio publicado",
+      "esperado": 201,
+      "obtenido": 201,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Desactivar beneficio",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Beneficio desactivado excluido del sitio público",
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Publicar escala con límite nulo",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Publicar escala con límites invertidos",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Publicar opción única sin opciones",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Publicar encuesta de seis tipos",
+      "esperado": 201,
+      "obtenido": 201,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Crear encuesta privada",
+      "esperado": 201,
+      "obtenido": 201,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Listado de encuestas públicas",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Detalle privado excluido",
+      "esperado": 404,
+      "obtenido": 404,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Envío privado rechazado",
+      "esperado": 404,
+      "obtenido": 404,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Crear encuesta sin anonimato",
+      "esperado": 201,
+      "obtenido": 201,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Encuesta sin anonimato rechazada",
+      "esperado": 403,
+      "obtenido": 403,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Crear encuesta vencida",
+      "esperado": 201,
+      "obtenido": 201,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Detalle vencido excluido",
+      "esperado": 404,
+      "obtenido": 404,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Borrador con escala aún sin configurar",
+      "esperado": 201,
+      "obtenido": 201,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Escala antigua nula no se interpreta como 0..0",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Archivar configuración antigua inválida sin reescribir preguntas",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Envío incompleto",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Opción de otra pregunta",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Pregunta ajena",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Escala fuera de rango",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Tipo numérico incorrecto",
+      "esperado": 422,
+      "obtenido": 422,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Envío anónimo válido guardado",
+      "esperado": 201,
+      "obtenido": 201,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Persistencia: 1 participación, 6 respuestas y 4 opciones; contacto nulo",
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Falla inducida durante escritura",
+      "esperado": 500,
+      "obtenido": 500,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Rollback completo tras falla posterior a insertar participación/respuestas",
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Preservar preguntas con respuestas",
+      "esperado": 409,
+      "obtenido": 409,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Preservar opciones con respuestas",
+      "esperado": 409,
+      "obtenido": 409,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Ruta anterior no altera preguntas respondidas",
+      "esperado": 409,
+      "obtenido": 409,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "No eliminar encuesta con histórico",
+      "esperado": 409,
+      "obtenido": 409,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Editar metadatos conservando respuestas",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Detalle público después de responder",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Respuestas no accesibles públicamente",
+      "esperado": 404,
+      "obtenido": 404,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Listado administrativo eventos",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Editor administrativo eventos",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Listado administrativo promociones",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Editor administrativo promociones",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Listado administrativo lealtad",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Editor administrativo lealtad",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Listado administrativo encuestas",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Editor administrativo encuestas",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Cerrar sesión",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Sesión cerrada rechazada",
+      "esperado": 401,
+      "obtenido": 401,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Ruta interna tras logout",
+      "esperado": 401,
+      "obtenido": 401,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "CSRF para probar límite",
+      "esperado": 200,
+      "obtenido": 200,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Límite de intentos de acceso",
+      "esperado": 429,
+      "obtenido": 429,
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Base existente conservada: conteos de todas las tablas sin cambios",
+      "resultado": "PASS",
+      "tablas": 37
+    }
+  ]
+}

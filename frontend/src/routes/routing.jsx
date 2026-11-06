@@ -8,6 +8,7 @@ import AdminDashboardPage from '../pages/admin-dashboard-page.jsx';
 import AdminLoginPage from '../pages/admin-login-page.jsx';
 import AdminPanelLayout from '../components/admin/admin-panel-layout.jsx';
 import PrivateRoutes from './private-routes.jsx';
+import AdminContentPage from '../pages/admin-content-page.jsx';
 
 export default function Routing() {
   return (
@@ -20,6 +21,7 @@ export default function Routing() {
         <Route element={<PrivateRoutes />}>
           <Route path="/admin" element={<AdminPanelLayout />}>
             <Route index element={<AdminDashboardPage />} />
+            {['eventos', 'promociones', 'lealtad', 'encuestas'].map(kind => <Route key={kind} path={kind} element={<AdminContentPage key={kind} kind={kind} />} />)}
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} />

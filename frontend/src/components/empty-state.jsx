@@ -3,6 +3,7 @@ export default function EmptyState({
   description,
   href,
   action,
+  onAction,
 }) {
   return (
     <div className="empty-state">
@@ -10,7 +11,9 @@ export default function EmptyState({
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
-      <a className="text-link" href={href}>{action}</a>
+      {onAction
+        ? <button className="text-link api-state__retry" type="button" onClick={onAction}>{action}</button>
+        : <a className="text-link" href={href}>{action}</a>}
     </div>
   );
 }

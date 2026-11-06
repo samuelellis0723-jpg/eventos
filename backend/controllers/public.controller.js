@@ -15,6 +15,7 @@ const {
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 50;
 const CURRENT_DATE = sequelize.literal('CURRENT_DATE');
+const { publicWindow, publicSurveyWhere } = require('../services/public-survey-policy');
 
 function parsePagination(req, res) {
   const pageValue = req.query.page;
@@ -31,25 +32,6 @@ function parsePagination(req, res) {
   }
 
   return { page, limit, offset: (page - 1) * limit };
-}
-
-function publicWindow(startField, endField) {
-  return {
-    [Op.and]: [
-      {
-        [Op.or]: [
-          { [startField]: null },
-          { [startField]: { [Op.lte]: CURRENT_DATE } }
-        ]
-      },
-      {
-        [Op.or]: [
-          { [endField]: null },
-          { [endField]: { [Op.gte]: CURRENT_DATE } }
-        ]
-      }
-    ]
-  };
 }
 
 function paginatedResponse(res, rows, total, page, limit) {
@@ -189,12 +171,8 @@ module.exports = {
       req,
       res,
       Model: Encuesta,
-      where: {
-        estado: 'publicado',
-        publica: true,
-        ...publicWindow('fecha_inicio', 'fecha_fin')
-      },
-      attributes: ['slug', 'titulo', 'introduccion', 'tipo'],
+      where: publicSurveyWhere(),
+      attributes: ['slug', 'titulo', 'introduccion', 'tipo', 'permite_anonimas'],
       order: [['titulo', 'ASC'], ['id', 'ASC']],
       operation: 'encuestas'
     });
@@ -203,13 +181,8 @@ module.exports = {
   async getSurveyBySlug(req, res) {
     try {
       const survey = await Encuesta.findOne({
-        where: {
-          slug: req.params.slug,
-          estado: 'publicado',
-          publica: true,
-          ...publicWindow('fecha_inicio', 'fecha_fin')
-        },
-        attributes: ['slug', 'titulo', 'introduccion', 'tipo'],
+        where: publicSurveyWhere(req.params.slug),
+        attributes: ['slug', 'titulo', 'introduccion', 'tipo', 'permite_anonimas'],
         include: [{
           model: EncuestaPregunta,
           as: 'preguntas',
@@ -230,11 +203,11 @@ module.exports = {
         return res.status(404).json({ success: false, message: 'Encuesta pública no encontrada.' });
       }
 
-      const data = projectRecord(survey, ['slug', 'titulo', 'introduccion', 'tipo']);
+      const data = projectRecord(survey, ['slug', 'titulo', 'introduccion', 'tipo', 'permite_anonimas']);
       const raw = survey.get({ plain: true });
       data.preguntas = (raw.preguntas || []).map((question) => ({
         ...projectRecord(question, ['id', 'texto', 'tipo_respuesta', 'obligatoria', 'orden', 'valor_minimo', 'valor_maximo']),
-        opciones: (question.opciones || []).map((option) => projectRecord(option, ['etiqueta', 'valor']))
+        opciones: (question.opciones || []).map((option) => projectRecord(option, ['id', 'etiqueta', 'valor']))
       }));
 
       return res.status(200).json({ success: true, data });

@@ -3,7 +3,7 @@ const API_BASE_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')
 export async function apiFetch(path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
-    credentials: options.credentials || 'same-origin',
+    credentials: options.credentials || (path.startsWith('/admin') ? 'include' : 'same-origin'),
     headers: {
       ...(options.body ? { 'Content-Type': 'application/json' } : {}),
       ...options.headers,
@@ -19,6 +19,10 @@ export async function apiFetch(path, options = {}) {
   if (!response.ok) {
     const error = new Error(payload?.message || `Error HTTP ${response.status}`);
     error.status = response.status;
+    error.code = payload?.code;
+    if (path.startsWith('/admin') && typeof window !== 'undefined' && (response.status === 401 || error.code === 'FORBIDDEN')) {
+      window.dispatchEvent(new Event('admin-session-changed'));
+    }
     throw error;
   }
   if (payload?.success === false) {
@@ -47,10 +51,18 @@ export async function getAdminSession(options = {}) {
 }
 
 export async function logoutAdmin(csrfToken) {
-  const token = csrfToken || await getAdminCsrfToken();
-  return apiFetch('/auth/logout', {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'X-CSRF-Token': token },
-  });
+  return adminApiFetch('/auth/logout', { method: 'POST' }, csrfToken);
+}
+
+export async function adminApiFetch(path, options = {}, csrfToken) {
+  const method = options.method || 'GET';
+  const mutating = !['GET', 'HEAD'].includes(method);
+  let token = mutating ? (csrfToken || await getAdminCsrfToken()) : null;
+  const execute = () => apiFetch(path, { ...options, credentials: 'include', headers: { ...options.headers, ...(token ? { 'X-CSRF-Token': token } : {}) } });
+  try { return await execute(); }
+  catch (error) {
+    if (!mutating || error.code !== 'CSRF_INVALID') throw error;
+    token = await getAdminCsrfToken();
+    return execute();
+  }
 }

@@ -1,10 +1,10 @@
 import { Link, useLocation } from 'react-router';
 
 const modules = [
-  { label: 'Eventos', status: 'Próximamente' },
-  { label: 'Promociones', status: 'Próximamente' },
-  { label: 'Lealtad', status: 'Próximamente' },
-  { label: 'Encuestas', status: 'Próximamente' },
+  { label: 'Eventos', path: '/admin/eventos' },
+  { label: 'Promociones', path: '/admin/promociones' },
+  { label: 'Lealtad', path: '/admin/lealtad' },
+  { label: 'Encuestas', path: '/admin/encuestas' },
 ];
 
 export default function AdminModuleNavigation() {
@@ -19,13 +19,13 @@ export default function AdminModuleNavigation() {
         aria-current={isPanel ? 'page' : undefined}
       >
         <span className="admin-module-nav__label"><span>00 /</span> Panel</span>
-        <span className="admin-module-nav__status">Activo</span>
+        {isPanel && <span className="admin-module-nav__status">Activo</span>}
       </Link>
       {modules.map((module, index) => (
-        <button className="admin-module-nav__item admin-module-nav__item--disabled" type="button" disabled key={module.label}>
+        <Link className={`admin-module-nav__item${pathname.startsWith(module.path) ? ' admin-module-nav__item--active' : ''}`} to={module.path} aria-current={pathname.startsWith(module.path) ? 'page' : undefined} key={module.label}>
           <span className="admin-module-nav__label"><span>{String(index + 1).padStart(2, '0')} /</span> {module.label}</span>
-          <span className="admin-module-nav__status">{module.status}</span>
-        </button>
+          {pathname.startsWith(module.path) && <span className="admin-module-nav__status">Activo</span>}
+        </Link>
       ))}
     </nav>
   );

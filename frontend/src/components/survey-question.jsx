@@ -1,3 +1,5 @@
+import { isValidScale } from '../services/survey-validation.js';
+
 function QuestionLabel({ question }) {
   return (
     <>
@@ -48,6 +50,7 @@ export default function SurveyQuestion({ question, answer, error, onAnswer }) {
           id={`${fieldId}-input`}
           className="survey-control"
           rows="3"
+          maxLength={5000}
           value={answer ?? ''}
           required={required}
           aria-required={required}
@@ -73,7 +76,7 @@ export default function SurveyQuestion({ question, answer, error, onAnswer }) {
           type="number"
           min={question.valor_minimo ?? undefined}
           max={question.valor_maximo ?? undefined}
-          step="1"
+          step="0.01"
           value={answer ?? ''}
           required={required}
           aria-required={required}
@@ -87,6 +90,12 @@ export default function SurveyQuestion({ question, answer, error, onAnswer }) {
   }
 
   if (question.tipo_respuesta === 'escala') {
+    if (!isValidScale(question)) return (
+      <div className="survey-question" id={fieldId} tabIndex={-1}>
+        <p className="survey-question__prompt">{questionLabel}</p>
+        <p className="survey-error" role="alert">La escala no tiene límites válidos. Esta encuesta necesita una corrección antes de recibir respuestas.</p>
+      </div>
+    );
     const first = Number(question.valor_minimo);
     const last = Number(question.valor_maximo);
     const values = Array.from({ length: Math.max(0, last - first + 1) }, (_, index) => first + index);
@@ -141,13 +150,13 @@ export default function SurveyQuestion({ question, answer, error, onAnswer }) {
         {hint && <p className="survey-question__hint" id={hintId}>{hint}</p>}
         <div className="survey-choice-list">
           {(question.opciones || []).map((option) => (
-            <label className="survey-choice" htmlFor={`${fieldId}-option-${option.valor}`} key={option.valor}>
+            <label className="survey-choice" htmlFor={`${fieldId}-option-${option.id}`} key={option.id}>
               <input
-                id={`${fieldId}-option-${option.valor}`}
+                id={`${fieldId}-option-${option.id}`}
                 type="radio"
                 name={fieldId}
-                value={option.valor}
-                checked={answer === option.valor}
+                value={option.id}
+                checked={String(answer) === String(option.id)}
                 required={required}
                 aria-required={required}
                 aria-invalid={Boolean(error)}
@@ -179,23 +188,23 @@ export default function SurveyQuestion({ question, answer, error, onAnswer }) {
         {hint && <p className="survey-question__hint" id={hintId}>{hint}</p>}
         <div className="survey-choice-list">
           {(question.opciones || []).map((option) => {
-            const optionId = `${fieldId}-option-${option.valor}`;
-            const isChecked = selected.includes(option.valor);
+            const optionId = `${fieldId}-option-${option.id}`;
+            const isChecked = selected.includes(String(option.id));
             return (
-              <label className="survey-choice" htmlFor={optionId} key={option.valor}>
+              <label className="survey-choice" htmlFor={optionId} key={option.id}>
                 <input
                   id={optionId}
                   type="checkbox"
                   name={`${fieldId}[]`}
-                  value={option.valor}
+                  value={option.id}
                   checked={isChecked}
                   aria-required={required}
                   aria-invalid={Boolean(error)}
                   aria-describedby={describedBy}
                   onChange={(event) => {
                     const next = event.target.checked
-                      ? [...selected, option.valor]
-                      : selected.filter((value) => value !== option.valor);
+                      ? [...selected, String(option.id)]
+                      : selected.filter((value) => value !== String(option.id));
                     onAnswer(question.id, next);
                   }}
                 />

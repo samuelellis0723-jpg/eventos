@@ -53,6 +53,19 @@ export default function PrivateRoutes() {
     return () => controller.abort();
   }, [attempt, checkSession]);
 
+  useEffect(() => {
+    const refresh = () => setAttempt(value => value + 1);
+    window.addEventListener('admin-session-changed', refresh);
+    return () => window.removeEventListener('admin-session-changed', refresh);
+  }, []);
+
+  useEffect(() => {
+    if (!result.session?.expiraEn) return undefined;
+    const delay = Math.max(0, new Date(result.session.expiraEn).getTime() - Date.now());
+    const timeout = window.setTimeout(() => setAttempt(value => value + 1), delay + 50);
+    return () => window.clearTimeout(timeout);
+  }, [result.session?.expiraEn]);
+
   if (result.status === 'checking') return <SessionCheck message="Comprobando la sesión…" />;
 
   if (result.status === 'expired') {
